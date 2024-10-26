@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.metrics import f1_score
 
-# Initialize a logger
+# Инициализация логгера
 logger = logging.getLogger(__name__)
 
 
@@ -50,11 +50,11 @@ def train_model(data):
         model.fit(x_train, y_train)
         joblib.dump(model, model_path)
 
-    # Calculate F1 score
+    # Подсчет F1-score
     y_pred = model.predict(x_test)
     f1 = f1_score(y_test, y_pred)
 
-    # Log and print F1 score
+    # Логирование и вывод
     logger.info(f"Model training completed with F1-score: {f1:.4f}")
     print(f"Model training completed with F1-score: {f1:.4f}")
 
