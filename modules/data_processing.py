@@ -6,8 +6,8 @@ def load_data():
     transactions = pd.read_csv("dataset/trnsctns_ops_trn.csv", sep=';', encoding='ISO-8859-1', low_memory=False)
 
     # Создание тестового файла (30% от данных)
-    test_data = clients.sample(frac=0.3, random_state=42)
-    test_data.to_csv("dataset/test_cntrbtrs_clnts.csv", index=False, encoding='utf-8', sep=';')
+    clients.to_csv("dataset/test_cntrbtrs_clnts.csv", index=False, encoding='utf-8', sep=';')
+
 
     # Возвращаем обработанные данные
     return clients, transactions
