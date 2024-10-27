@@ -29,7 +29,7 @@ def create_submission_file(model, transactions):
     # Извлекайте функции для прогнозирования
     x_test = test_data.drop(columns=['accnt_id'])
 
-    # Генерация прогнозы
+    # Генерация прогнозов
     predictions = model.predict(x_test)
 
     # Создайте фрейм данных с результатами
@@ -38,7 +38,8 @@ def create_submission_file(model, transactions):
         'erly_pnsn_flg': predictions
     })
 
-    # Save predictions
-    submission_file_path = "dataset/submission.csv"
+    # Сохраните предсказания в файл sample_submission.csv
+    submission_file_path = "dataset/sample_submission.csv"
     submission.to_csv(submission_file_path, index=False, encoding='utf-8')
     print(f"Predictions saved to {submission_file_path}")
+

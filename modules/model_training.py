@@ -1,6 +1,6 @@
 import os
 import joblib
-import logging  # Add logging
+import logging
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -8,19 +8,15 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.metrics import f1_score
 
-# Инициализация логгера
 logger = logging.getLogger(__name__)
 
 
 def train_model(data):
-    # Выделение целевой переменной и идентификаторов
     x = data.drop(columns=['erly_pnsn_flg', 'accnt_id'])
     y = data['erly_pnsn_flg']
 
-    # Разделение данных на обучающую и тестовую выборки
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
-    # Пайплайн предобработки
     numerical_features = ['prsnt_age', 'transaction_count', 'total_sum', 'unique_movement_types']
     categorical_features = ['gndr', 'rgn', 'accnt_status']
 
@@ -31,7 +27,6 @@ def train_model(data):
         ]
     )
 
-    # Модель
     model = Pipeline(steps=[
         ('preprocessor', preprocessor),
         ('classifier', RandomForestClassifier(
@@ -42,7 +37,6 @@ def train_model(data):
         ))
     ])
 
-    # Сохранение модели
     model_path = 'dataset/model.pkl'
     if os.path.exists(model_path):
         model = joblib.load(model_path)
@@ -50,11 +44,20 @@ def train_model(data):
         model.fit(x_train, y_train)
         joblib.dump(model, model_path)
 
-    # Подсчет F1-score
+        # Удаление файлов обучающих данных
+        training_files = ["dataset/cntrbtrs_clnts_ops_trn.csv", "dataset/trnsctns_ops_trn.csv"]
+        for file in training_files:
+            if os.path.exists(file):
+                os.remove(file)
+                logger.info(f"Файл {file} успешно удалён.")
+
+        # Сообщение о необходимости тестовых данных
+        logger.info(
+            "Для предсказаний требуются тестовые данные: 'cntrbtrs_clnts_ops_tst.csv' и 'trnsctns_ops_tst.csv'.")
+
     y_pred = model.predict(x_test)
     f1 = f1_score(y_test, y_pred)
 
-    # Логирование и вывод
     logger.info(f"Model training completed with F1-score: {f1:.4f}")
     print(f"Model training completed with F1-score: {f1:.4f}")
 
